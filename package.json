@@ -1,0 +1,14 @@
+{
+  "name": "babel-plugin-transform-custom-repl",
+  "version": "1.0.0",
+  "description": "> Add console.log statements to some member expressions, used only in vscode-javascript-repl, and is not supposed to be used for general purposes",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
