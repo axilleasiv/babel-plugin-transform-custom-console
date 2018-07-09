@@ -1,12 +1,6 @@
 # babel-plugin-transform-custom-repl
 
-> Add console.log statements to some member expressions, used only in vscode-javascript-repl, and is not supposed to be used for general purposes
-
-## Installation
-
-```sh
-npm install --save-dev babel-plugin-transform-custom-repl
-```
+> Replace console.log statements with a custom name to some expression statements, used only in https://github.com/axilleasiv/parcel/tree/no-fs-rw-version, and is not supposed to be used for general purposes
 
 ## Usage
 
@@ -16,20 +10,20 @@ npm install --save-dev babel-plugin-transform-custom-repl
 
 ```json
 {
-  "plugins": [babel-plugin-transform-custom-repl"]
+  "plugins": [babel-plugin-transform-custom-console"]
 }
 ```
 
 ### Via CLI
 
 ```sh
-babel --plugins babel-plugin-transform-custom-repl script.js
+babel --plugins babel-plugin-transform-custom-console script.js
 ```
 
 ### Via Node API
 
 ```javascript
 require("babel-core").transform("code", {
-  plugins: ["babel-plugin-transform-custom-repl"]
+  plugins: ["babel-plugin-transform-custom-console"]
 });
 ```
