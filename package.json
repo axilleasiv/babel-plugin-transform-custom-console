@@ -2,13 +2,13 @@
   "name": "babel-plugin-transform-custom-console",
   "version": "1.0.0",
   "description": "> Replace console.log statements with a custom name to some expression statements",
-  "main": "index.js",
+  "main": "lib/index.js",
   "directories": {
     "lib": "lib"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Achilleas Kiritsakas",
   "license": "MIT"
 }
