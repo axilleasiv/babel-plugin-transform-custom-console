@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CommentBlock log expression 1`] = `
+"
+var arr = function () {
+  var _val = [1000, 200, 5, 5555];
+  $console.log(_val.length, 2);
+  return _val;
+}();"
+`;
+
+exports[`CommentBlock log on var 1`] = `
+"var arr = function () {
+  var _val = [1000, 200, 5, 5555];
+  $console.log(_val, 1);
+  return _val;
+}();"
+`;
+
+exports[`CommentLine log expression 1`] = `
+"var arr = function () {
+  var _val = [1000, 200, 5, 5555];
+  $console.log(_val.length, 1);
+  return _val;
+}();"
+`;
+
+exports[`CommentLine log on var 1`] = `
+"var arr = function () {
+  var _val = [1000, 200, 5, 5555];
+  $console.log(_val, 1);
+  return _val;
+}();"
+`;
+
+exports[`console message with arguments 1`] = `"$console.log('Array', [1, 2, 3], 'Object', '{a:1, b:2}', 1);"`;
+
+exports[`simple console message 1`] = `"$console.log('message', 1);"`;
+
+exports[`simple one line console 1`] = `"$console.log(1, 1);"`;
