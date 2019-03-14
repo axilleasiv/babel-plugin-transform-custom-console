@@ -1,12 +1,99 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CommentBlock log expression 1`] = `
+exports[`Chain CallExpression 1`] = `
 "
-var arr = function () {
-  var _val = [1000, 200, 5, 5555];
-  $console.log(_val.length, 2);
+var arr = [1000, 200, 10, 1];
+
+(function () {
+  var _val = function () {
+    var _val2 = function () {
+      var _val3 = function () {
+        var _val4 = arr;
+        $console.log(_val4, 4);
+        return _val4;
+      }().sort(function (a, b) {
+        return a > b;
+      });
+
+      $console.log(_val3, 7);
+      return _val3;
+    }().filter(function (val) {
+      return val > 5;
+    });
+
+    $console.log(_val2, 10);
+    return _val2;
+  }().reverse();
+
+  $console.log(_val, 11);
   return _val;
-}();"
+})();"
+`;
+
+exports[`Chain CallExpression 2 1`] = `
+"
+var locations = function () {
+  var _val = [{
+    id: 1,
+    name: 'Paris',
+    country: 'France',
+    population: 2140526
+  }, {
+    id: 7,
+    name: 'Athens',
+    country: 'Greece',
+    population: 3090508
+  }, {
+    id: 9,
+    name: 'Los Angeles',
+    country: 'United States',
+    population: 3999759
+  }];
+  $console.log(_val, 21);
+  return _val;
+}();
+
+var getCountry = function () {
+  var _val2 = country => 'The country is: ' + country;
+
+  $console.log(_val2, 23);
+  return _val2;
+}();
+
+var result = function () {
+  var _val3 = function () {
+    var _val4 = locations;
+    $console.log(_val4.length, 25);
+    return _val4;
+  }().filter(location => {
+    return function () {
+      var _val5 = function () {
+        var _val6 = location.population;
+        $console.log(_val6, 27);
+        return _val6;
+      }() >= 2200000 && location.population <= 4000000;
+
+      $console.log(_val5, 28);
+      return _val5;
+    }();
+  }).map(location => {
+    return function () {
+      var _val7 = getCountry(function () {
+        var _val8 = location.country;
+        $console.log(_val8, 31);
+        return _val8;
+      }());
+
+      $console.log(_val7, 31);
+      return _val7;
+    }();
+  });
+
+  $console.log(_val3.length, 32);
+  return _val3;
+}();
+
+$console.log(result, 34);"
 `;
 
 exports[`CommentBlock log on var 1`] = `
