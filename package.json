@@ -1,6 +1,6 @@
 {
   "name": "@achil/babel-plugin-console",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "> Replace console.log statements with a custom name to some expression statements",
   "main": "lib/index.js",
   "directories": {
