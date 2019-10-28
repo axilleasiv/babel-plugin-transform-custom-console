@@ -1,16 +1,20 @@
 const babel = require('babel-core');
-const plugin = require('../lib/index');
-
+const { logger: plugin } = require('../lib/index');
+const filename = 'file';
 const plugins = [
   [
     plugin,
     {
       consoleName: '$console',
-      fileName: 'file'
+      doc: {
+        rel: filename,
+        line: 0,
+        idx: 1
+      }
     }
   ]
 ];
-const filename = 'file';
+
 const config = {
   plugins,
   filename,
@@ -44,6 +48,7 @@ it('console message with arguments', () => {
     `console.log('Array', [1, 2, 3], 'Object', '{a:1, b:2}')`,
     config
   );
+
   expect(code).toMatchSnapshot();
 });
 
@@ -65,7 +70,13 @@ it('CommentBlock log on var', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith([1000, 200, 5, 5555], 1);
+  expect($console.log).toBeCalledWith(
+    [[1000, 200, 5, 5555]],
+    [[1, 1]],
+    'file',
+    ['arr~_val'],
+    1
+  );
 });
 
 it('CommentLine log expression', () => {
@@ -78,7 +89,13 @@ it('CommentLine log expression', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith(4, 1);
+  expect($console.log).toBeCalledWith(
+    [4],
+    [[1, 1]],
+    'file',
+    ['arr.length~_val'],
+    1
+  );
 });
 
 it('BinaryExpression', () => {
@@ -87,7 +104,7 @@ it('BinaryExpression', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith(2000, 1);
+  expect($console.log).toBeCalledWith([2000], [[1, 1]], 'file', ['+'], 1);
 });
 
 it('Identifier expression', () => {
@@ -96,7 +113,13 @@ it('Identifier expression', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith([1000, 200], 2);
+  expect($console.log).toBeCalledWith(
+    [[1000, 200]],
+    [[2, 2]],
+    'file',
+    ['arr'],
+    1
+  );
 });
 
 it('Identifier through comments', () => {
@@ -105,7 +128,13 @@ it('Identifier through comments', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith([1000, 200], 2);
+  expect($console.log).toBeCalledWith(
+    [[1000, 200]],
+    [[2, 2], [1, 1]],
+    'file',
+    ['arr~_val'],
+    1
+  );
 });
 
 it('Identifier through comments property', () => {
@@ -117,7 +146,13 @@ it('Identifier through comments property', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith(2, 2);
+  expect($console.log).toBeCalledWith(
+    [2],
+    [[2, 2], [1, 1]],
+    'file',
+    ['arr.length~_val'],
+    1
+  );
 });
 
 it('VariableDeclaration through comments', () => {
@@ -130,8 +165,20 @@ it('VariableDeclaration through comments', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(2);
-  expect($console.log).toBeCalledWith([1000, 200], 1);
-  expect($console.log).toBeCalledWith(2, 2);
+  expect($console.log).toBeCalledWith(
+    [[1000, 200]],
+    [[1, 1]],
+    'file',
+    ['arr~_val'],
+    1
+  );
+  expect($console.log).toBeCalledWith(
+    [2],
+    [[2, 2]],
+    'file',
+    ['arr2.length~_val2'],
+    1
+  );
 });
 
 it('MemberExpression through comments', () => {
@@ -144,7 +191,13 @@ it('MemberExpression through comments', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(1);
-  expect($console.log).toBeCalledWith(2, 2);
+  expect($console.log).toBeCalledWith(
+    [2],
+    [[2, 2]],
+    'file',
+    ['arr.length~_val'],
+    1
+  );
 });
 
 it('CallExpression', () => {
@@ -164,8 +217,14 @@ it('CallExpression', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(2);
-  expect($console.log).toBeCalledWith('value', 7);
-  expect($console.log).toBeCalledWith(1, 8);
+  expect($console.log).toBeCalledWith(
+    ['value'],
+    [[7, 7], [3, 6]],
+    'file',
+    ['fn()~_val'],
+    1
+  );
+  expect($console.log).toBeCalledWith([1], [[8, 8], [2, 2]], 'file', ['i'], 1);
 });
 
 it('CallExpression object', () => {
@@ -187,8 +246,20 @@ it('CallExpression object', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(2);
-  expect($console.log).toBeCalledWith('value', 9);
-  expect($console.log).toBeCalledWith(1, 10);
+  expect($console.log).toBeCalledWith(
+    ['value'],
+    [[9, 9]],
+    'file',
+    ['obj.fn()~_val'],
+    1
+  );
+  expect($console.log).toBeCalledWith(
+    [1],
+    [[10, 10], [2, 2]],
+    'file',
+    ['i'],
+    1
+  );
 });
 
 it('Check double comments or falsy chars', () => {
@@ -211,12 +282,37 @@ it('Check double comments or falsy chars', () => {
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(4);
-  expect($console.log).toBeCalledWith(7, 8);
-  expect($console.log).toBeCalledWith(5, 9);
-  expect($console.log).toBeCalledWith(6, 10);
+  expect($console.log).toBeCalledWith(
+    [7],
+    [[8, 8], [2, 6]],
+    'file',
+    ['obj.c~_val'],
+    1
+  );
+  expect($console.log).toBeCalledWith(
+    [5],
+    [[9, 9]],
+    'file',
+    ['obj.a~_val2'],
+    1
+  );
+  expect($console.log).toBeCalledWith(
+    [6],
+    [[10, 10]],
+    'file',
+    ['obj.b~_val3'],
+    1
+  );
+  expect($console.log).toBeCalledWith(
+    [7],
+    [[11, 11]],
+    'file',
+    ['obj.c~_val4'],
+    1
+  );
 });
 
-// TODO:
+// // TODO:
 it('Expression through comments', () => {
   const { code } = babel.transform(
     `
@@ -232,10 +328,13 @@ it('Expression through comments', () => {
     config
   );
 
+  expect(code).toMatchSnapshot();
+
   eval(code);
 
   expect($console.log).toHaveBeenCalledTimes(7);
-  expect($console.log).toBeCalledWith(2, 7);
+  //i increased to 2
+  expect($console.log).toBeCalledWith([2], [[7, 7]], 'file', ['i'], 1);
 });
 
 it('Chain CallExpression', () => {
@@ -259,73 +358,13 @@ it('Chain CallExpression', () => {
 
   expect(code).toMatchSnapshot();
   expect($console.log).toHaveBeenCalledTimes(4);
-  expect($console.log).toHaveBeenCalledWith([1, 10, 200, 1000], 4);
-  expect($console.log.mock.calls[1][1]).toBe(7);
-  expect($console.log.mock.calls[2][1]).toBe(10);
-  expect($console.log).lastCalledWith([1000, 200, 10], 11);
-});
-
-it('Chain CallExpression 2', () => {
-  const { code } = babel.transform(
-    `
-      var locations = [
-        {
-          id: 1,
-          name: 'Paris',
-          country: 'France',
-          population: 2140526
-        },
-        {
-          id: 7,
-          name: 'Athens',
-          country: 'Greece',
-          population: 3090508
-        },
-        {
-          id: 9,
-          name: 'Los Angeles',
-          country: 'United States',
-          population: 3999759
-        }
-      ]; //=
-
-      var getCountry = country => 'The country is: ' + country; //=
-
-      var result = locations //= $.length
-        .filter(location => {
-          return location.population /*=*/ >= 2200000 &&
-           location.population <= 4000000 //=
-        })
-        .map(location => {
-          return getCountry(location.country /*=*/); //=
-        })/*= $.length */
-
-        console.log(result);
-    `,
-    config
-  );
-
-  eval(code);
-
-  expect(code).toMatchSnapshot();
-  expect($console.log).toHaveBeenCalledTimes(15);
-  expect($console.log).toHaveBeenCalledWith(3, 25);
-  expect($console.log).toHaveBeenCalledWith(3999759, 27);
-  expect($console.log).toHaveBeenCalledWith(3090508, 27);
-  expect($console.log).toHaveBeenCalledWith(2140526, 27);
-  expect($console.log).toHaveBeenCalledWith(false, 28);
-  expect($console.log).toHaveBeenCalledWith(true, 28);
-  expect($console.log).toHaveBeenCalledWith(true, 28);
-  expect($console.log).toHaveBeenCalledWith('Greece', 31);
-  expect($console.log).toHaveBeenCalledWith('United States', 31);
-  expect($console.log).toHaveBeenCalledWith('The country is: Greece', 31);
-  expect($console.log).toHaveBeenCalledWith(
-    'The country is: United States',
-    31
-  );
-  expect($console.log).toHaveBeenCalledWith(2, 32);
-  expect($console.log).toHaveBeenCalledWith(
-    ['The country is: Greece', 'The country is: United States'],
-    34
+  expect($console.log).lastCalledWith(
+    [[1000, 200, 10]],
+    [[4, 11]],
+    'file',
+    [
+      'arr .sort(function(a, b) {return a > b}) .filter(function(val) {return val > 5}) .reverse()~_val'
+    ],
+    1
   );
 });

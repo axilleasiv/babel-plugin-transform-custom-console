@@ -9,97 +9,31 @@ var arr = [1000, 200, 10, 1];
     var _val2 = function () {
       var _val3 = function () {
         var _val4 = arr;
-        $console.log(_val4, 4);
+        $console.log([_val4], [[4, 4]], \\"file\\", [\\"arr~_val4\\"], 1);
         return _val4;
       }().sort(function (a, b) {
         return a > b;
       });
 
-      $console.log(_val3, 7);
+      $console.log([_val3], [[4, 7]], \\"file\\", [\\"arr .sort(function(a, b) {return a > b})~_val3\\"], 1);
       return _val3;
     }().filter(function (val) {
       return val > 5;
     });
 
-    $console.log(_val2, 10);
+    $console.log([_val2], [[4, 10]], \\"file\\", [\\"arr .sort(function(a, b) {return a > b}) .filter(function(val) {return val > 5})~_val2\\"], 1);
     return _val2;
   }().reverse();
 
-  $console.log(_val, 11);
+  $console.log([_val], [[4, 11]], \\"file\\", [\\"arr .sort(function(a, b) {return a > b}) .filter(function(val) {return val > 5}) .reverse()~_val\\"], 1);
   return _val;
 })();"
-`;
-
-exports[`Chain CallExpression 2 1`] = `
-"
-var locations = function () {
-  var _val = [{
-    id: 1,
-    name: 'Paris',
-    country: 'France',
-    population: 2140526
-  }, {
-    id: 7,
-    name: 'Athens',
-    country: 'Greece',
-    population: 3090508
-  }, {
-    id: 9,
-    name: 'Los Angeles',
-    country: 'United States',
-    population: 3999759
-  }];
-  $console.log(_val, 21);
-  return _val;
-}();
-
-var getCountry = function () {
-  var _val2 = country => 'The country is: ' + country;
-
-  $console.log(_val2, 23);
-  return _val2;
-}();
-
-var result = function () {
-  var _val3 = function () {
-    var _val4 = locations;
-    $console.log(_val4.length, 25);
-    return _val4;
-  }().filter(location => {
-    return function () {
-      var _val5 = function () {
-        var _val6 = location.population;
-        $console.log(_val6, 27);
-        return _val6;
-      }() >= 2200000 && location.population <= 4000000;
-
-      $console.log(_val5, 28);
-      return _val5;
-    }();
-  }).map(location => {
-    return function () {
-      var _val7 = getCountry(function () {
-        var _val8 = location.country;
-        $console.log(_val8, 31);
-        return _val8;
-      }());
-
-      $console.log(_val7, 31);
-      return _val7;
-    }();
-  });
-
-  $console.log(_val3.length, 32);
-  return _val3;
-}();
-
-$console.log(result, 34);"
 `;
 
 exports[`CommentBlock log on var 1`] = `
 "var arr = function () {
   var _val = [1000, 200, 5, 5555];
-  $console.log(_val, 1);
+  $console.log([_val], [[1, 1]], \\"file\\", [\\"arr~_val\\"], 1);
   return _val;
 }();"
 `;
@@ -107,7 +41,7 @@ exports[`CommentBlock log on var 1`] = `
 exports[`CommentLine log expression 1`] = `
 "var arr = function () {
   var _val = [1000, 200, 5, 5555];
-  $console.log(_val.length, 1);
+  $console.log([_val.length], [[1, 1]], \\"file\\", [\\"arr.length~_val\\"], 1);
   return _val;
 }();"
 `;
@@ -115,13 +49,54 @@ exports[`CommentLine log expression 1`] = `
 exports[`CommentLine log on var 1`] = `
 "var arr = function () {
   var _val = [1000, 200, 5, 5555];
-  $console.log(_val, 1);
+  $console.log([_val], [[1, 1]], \\"file\\", [\\"arr~_val\\"], 1);
   return _val;
 }();"
 `;
 
-exports[`console message with arguments 1`] = `"$console.log('Array', [1, 2, 3], 'Object', '{a:1, b:2}', 1);"`;
+exports[`Expression through comments 1`] = `
+"
+var i = 0;
+var arr = function () {
+      var _val = [1, 2, 3];
+      $console.log([i++], [[3, 3]], \\"file\\", [\\"arr~_val\\"], 1);
+      return _val;
+}();
+(function () {
+      var _val2 = i;
+      $console.log([_val2], [[4, 4], [2, 2]], \\"file\\", [\\"i~_val2\\"], 1);
+      return _val2;
+})();
 
-exports[`simple console message 1`] = `"$console.log('message', 1);"`;
+(function () {
+      var _val3 = i;
+      $console.log([_val3], [[5, 5], [2, 2]], \\"file\\", [\\"i~_val3\\"], 1);
+      return _val3;
+})();
 
-exports[`simple one line console 1`] = `"$console.log(1, 1);"`;
+(function () {
+      var _val4 = i;
+      $console.log([i++], [[6, 6], [2, 2]], \\"file\\", [\\"i~_val4\\"], 1);
+      return _val4;
+})();
+
+$console.log([i], [[7, 7]], \\"file\\", [\\"i\\"], 1);
+
+(function () {
+      var _val5 = arr;
+      $console.log([arr.length], [[8, 8], [3, 3]], \\"file\\", [\\"arr~_val5\\"], 1);
+      return _val5;
+})();
+
+(function () {
+      var _val6 = arr;
+      $console.log([_val6.length], [[9, 9], [3, 3]], \\"file\\", [\\"arr.length~_val6\\"], 1);
+      return _val6;
+})();"
+`;
+
+exports[`console message with arguments 1`] = `"$console.log(['Array', [1, 2, 3], 'Object', '{a:1, b:2}'], [[[1, 1]], [[1, 1]], [[1, 1]], [[1, 1]]], 'file', ['\\\\'Array\\\\'', '[1, 2, 3]', '\\\\'Object\\\\'', '\\\\'{a:1, b:2}\\\\''], 1);"`;
+
+exports[`simple console message 1`] = `"$console.log(['message'], [[1, 1]], 'file', ['\\\\'message\\\\''], 1);"`;
+
+exports[`simple one line console 1`] = `"$console.log([1], [[1, 1]], \\"file\\", [\\"1\\"], 1);"`;
