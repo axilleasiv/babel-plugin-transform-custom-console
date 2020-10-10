@@ -1,17 +1,21 @@
 const babel = require('babel-core');
 const plugin = require('./lib/index');
 const inspect = require('util').inspect;
-
+const filename = 'file';
 const plugins = [
   [
-    plugin,
+    plugin.logger,
     {
       consoleName: '$console',
-      fileName: 'file'
+      doc: {
+        rel: filename,
+        line: 0,
+        idx: 1
+      }
     }
   ]
 ];
-const filename = 'file';
+
 const config = {
   plugins,
   filename,

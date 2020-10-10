@@ -1,6 +1,7 @@
 const babel = require('babel-core');
 const { logger: plugin } = require('../lib/index');
 const filename = 'file';
+const idx = 1;
 const plugins = [
   [
     plugin,
@@ -9,7 +10,7 @@ const plugins = [
       doc: {
         rel: filename,
         line: 0,
-        idx: 1
+        idx,
       }
     }
   ]
@@ -75,7 +76,7 @@ it('CommentBlock log on var', () => {
     [[1, 1]],
     'file',
     ['arr~_val'],
-    1
+    idx
   );
 });
 
@@ -94,7 +95,7 @@ it('CommentLine log expression', () => {
     [[1, 1]],
     'file',
     ['arr.length~_val'],
-    1
+    idx
   );
 });
 
@@ -118,7 +119,7 @@ it('Identifier expression', () => {
     [[2, 2]],
     'file',
     ['arr'],
-    1
+    idx
   );
 });
 
@@ -133,7 +134,7 @@ it('Identifier through comments', () => {
     [[2, 2], [1, 1]],
     'file',
     ['arr~_val'],
-    1
+    idx
   );
 });
 
@@ -151,7 +152,7 @@ it('Identifier through comments property', () => {
     [[2, 2], [1, 1]],
     'file',
     ['arr.length~_val'],
-    1
+    idx
   );
 });
 
@@ -170,14 +171,14 @@ it('VariableDeclaration through comments', () => {
     [[1, 1]],
     'file',
     ['arr~_val'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith(
     [2],
     [[2, 2]],
     'file',
     ['arr2.length~_val2'],
-    1
+    idx
   );
 });
 
@@ -196,7 +197,7 @@ it('MemberExpression through comments', () => {
     [[2, 2]],
     'file',
     ['arr.length~_val'],
-    1
+    idx
   );
 });
 
@@ -222,7 +223,7 @@ it('CallExpression', () => {
     [[7, 7], [3, 6]],
     'file',
     ['fn()~_val'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith([1], [[8, 8], [2, 2]], 'file', ['i'], 1);
 });
@@ -251,14 +252,14 @@ it('CallExpression object', () => {
     [[9, 9]],
     'file',
     ['obj.fn()~_val'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith(
     [1],
     [[10, 10], [2, 2]],
     'file',
     ['i'],
-    1
+    idx
   );
 });
 
@@ -287,28 +288,28 @@ it('Check double comments or falsy chars', () => {
     [[8, 8], [2, 6]],
     'file',
     ['obj.c~_val'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith(
     [5],
     [[9, 9]],
     'file',
     ['obj.a~_val2'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith(
     [6],
     [[10, 10]],
     'file',
     ['obj.b~_val3'],
-    1
+    idx
   );
   expect($console.log).toBeCalledWith(
     [7],
     [[11, 11]],
     'file',
     ['obj.c~_val4'],
-    1
+    idx
   );
 });
 
@@ -358,13 +359,68 @@ it('Chain CallExpression', () => {
 
   expect(code).toMatchSnapshot();
   expect($console.log).toHaveBeenCalledTimes(4);
-  expect($console.log).lastCalledWith(
-    [[1000, 200, 10]],
-    [[4, 11]],
-    'file',
+  expect($console.log).toHaveBeenNthCalledWith(1,
+    [[1000, 200, 10, 1]],
+    [[4, 4]],
+    filename,
+    ["arr~_val4"],
+    idx
+  );
+  expect($console.log).toHaveBeenNthCalledWith(2,
+    [[1000, 200, 10, 1]],
+    [[4, 7]],
+    filename,
+    ["arr .sort(function(a, b) {return a > b})~_val3"],
+    idx,
+  );
+});
+
+it.only('Object destructuring', () => {
+  const { code } = babel.transform(
+    `const profile = {
+      firstName: 'John',
+      lastName: 'Doe',
+      age: 17,
+      details: {
+        city: 'Athens',
+        country: 'Greece',
+      },
+    };
+
+    const {
+      firstName,
+      lastName,
+      age,
+      details,
+      details: { city, country: aliasCountry },
+    } = profile;
+
+    console.log(firstName, lastName, age, details, city, aliasCountry);`,
+    config
+  );
+
+  eval(code);
+
+  expect(code).toMatchSnapshot();
+  expect($console.log).toHaveBeenCalledTimes(1);
+
+  const details = {
+    city: 'Athens',
+    country: 'Greece'
+  };
+
+  expect($console.log).toBeCalledWith(
+    ["John", "Doe", 17, details, details.city, details.country],
     [
-      'arr .sort(function(a, b) {return a > b}) .filter(function(val) {return val > 5}) .reverse()~_val'
+      [[19, 19], [11, 17]],
+      [[19, 19], [11, 17]],
+      [[19, 19], [11, 17]],
+      [[19, 19], [11, 17]],
+      [[19, 19], [11, 17]],
+      [[19, 19], [11, 17]],
     ],
-    1
+    'file',
+    ['firstName', 'lastName', 'age', 'details', 'city', 'aliasCountry'],
+    idx,
   );
 });

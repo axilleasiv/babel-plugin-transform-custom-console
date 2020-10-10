@@ -95,6 +95,28 @@ $console.log([i], [[7, 7]], \\"file\\", [\\"i\\"], 1);
 })();"
 `;
 
+exports[`Object destructuring 1`] = `
+"const profile = {
+  firstName: 'John',
+  lastName: 'Doe',
+  age: 17,
+  details: {
+    city: 'Athens',
+    country: 'Greece'
+  }
+};
+
+const {
+  firstName,
+  lastName,
+  age,
+  details,
+  details: { city, country: aliasCountry }
+} = profile;
+
+$console.log([firstName, lastName, age, details, city, aliasCountry], [[[19, 19], [11, 17]], [[19, 19], [11, 17]], [[19, 19], [11, 17]], [[19, 19], [11, 17]], [[19, 19], [11, 17]], [[19, 19], [11, 17]]], 'file', ['firstName', 'lastName', 'age', 'details', 'city', 'aliasCountry'], 1);"
+`;
+
 exports[`console message with arguments 1`] = `"$console.log(['Array', [1, 2, 3], 'Object', '{a:1, b:2}'], [[[1, 1]], [[1, 1]], [[1, 1]], [[1, 1]]], 'file', ['\\\\'Array\\\\'', '[1, 2, 3]', '\\\\'Object\\\\'', '\\\\'{a:1, b:2}\\\\''], 1);"`;
 
 exports[`simple console message 1`] = `"$console.log(['message'], [[1, 1]], 'file', ['\\\\'message\\\\''], 1);"`;
