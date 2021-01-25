@@ -22,12 +22,27 @@ const config = {
   comments: false
 };
 
+const detectInfiniteLoops = 100;
 const $console = {
   log: jest.fn(function() {
     var args = Array.prototype.slice.call(arguments);
 
     return args;
-  })
+  }),
+  loops: {},
+  detectLoop: jest.fn(function(location, filename, idx) {
+    const key = `${location[0]}-${location[1]}-${filename}-${idx}`;
+
+    if (!this.loops[key]) {
+      this.loops[key] = 0;
+    }
+
+    if (this.loops[key] >= detectInfiniteLoops) {
+      this.loops[key] = undefined;
+      throw new Error(`Too many loops detected (×${detectInfiniteLoops})`);
+    }
+    this.loops[key] += 1;
+  }),
 };
 
 beforeEach(() => {
@@ -313,8 +328,7 @@ it('Check double comments or falsy chars', () => {
   );
 });
 
-// // TODO:
-it.skip('Expression through comments', () => {
+it('Expression through comments', () => {
   const { code } = babel.transform(
     `
       var i = 0;
@@ -423,4 +437,77 @@ it('Object destructuring', () => {
     ['firstName', 'lastName', 'age', 'details', 'city', 'aliasCountry'],
     idx,
   );
+});
+
+it('detectInfiniteLoop#disabled', () => {
+  const { code } = babel.transformSync(
+    `function powerRanger(power, min, max) {
+      let powValue = 0;
+      let counter = min;
+      let listArr = [];
+      while (powValue < max) {
+        powValue = Math.pow(power, 1 / counter);
+
+        break;
+
+        listArr.push(counter);
+        counter++;
+      }
+      return listArr;
+    }
+    console.log(powerRanger(2, 49, 65));`,
+    config
+  );
+
+  eval(code);
+
+  expect($console.detectLoop).toHaveBeenCalledTimes(0);
+});
+
+it('detectInfiniteLoop#enabled', () => {
+  const plugins = [
+    [
+      plugin,
+      {
+        consoleName: '$console',
+        detectInfiniteLoops: true,
+        doc: {
+          rel: filename,
+          line: 0,
+          idx,
+        }
+      }
+    ]
+  ];
+
+  const config = {
+    plugins,
+    filename,
+    comments: false
+  };
+
+
+  const { code } = babel.transformSync(
+    `function powerRanger(power, min, max) {
+      let powValue = 0;
+      let counter = min;
+      let listArr = [];
+      while (powValue < max) {
+        powValue = Math.pow(power, 1 / counter);
+
+        break;
+
+        listArr.push(counter);
+        counter++;
+      }
+      return listArr;
+    }
+    console.log(powerRanger(2, 49, 65));`,
+    config
+  );
+
+  eval(code);
+
+  expect($console.detectLoop).toHaveBeenCalledTimes(1);
+  expect($console.loops).toEqual({"5-12-file-1": 1});
 });

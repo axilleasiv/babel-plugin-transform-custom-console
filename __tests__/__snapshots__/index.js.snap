@@ -54,43 +54,44 @@ exports[`CommentLine log on var 1`] = `
 `;
 
 exports[`Expression through comments 1`] = `
-"
-var i = 0;
+"var i = 0;
+
 var arr = function () {
-      var _val = [1, 2, 3];
-      $console.log([i++], [[3, 3]], \\"file\\", [\\"arr~_val\\"], 1);
-      return _val;
+  var _val = [1, 2, 3];
+  $console.log([i++], [[3, 3]], \\"file\\", [\\"arr~_val\\"], 1);
+  return _val;
 }();
+
 (function () {
-      var _val2 = i;
-      $console.log([_val2], [[4, 4], [2, 2]], \\"file\\", [\\"i~_val2\\"], 1);
-      return _val2;
+  var _val2 = i;
+  $console.log([_val2], [[4, 4], [2, 2]], \\"file\\", [\\"i~_val2\\"], 1);
+  return _val2;
 })();
 
 (function () {
-      var _val3 = i;
-      $console.log([_val3], [[5, 5], [2, 2]], \\"file\\", [\\"i~_val3\\"], 1);
-      return _val3;
+  var _val3 = i;
+  $console.log([_val3], [[5, 5], [2, 2]], \\"file\\", [\\"i~_val3\\"], 1);
+  return _val3;
 })();
 
 (function () {
-      var _val4 = i;
-      $console.log([i++], [[6, 6], [2, 2]], \\"file\\", [\\"i~_val4\\"], 1);
-      return _val4;
+  var _val4 = i;
+  $console.log([i++], [[6, 6], [2, 2]], \\"file\\", [\\"i~_val4\\"], 1);
+  return _val4;
 })();
 
 $console.log([i], [[7, 7]], \\"file\\", [\\"i\\"], 1);
 
 (function () {
-      var _val5 = arr;
-      $console.log([arr.length], [[8, 8], [3, 3]], \\"file\\", [\\"arr~_val5\\"], 1);
-      return _val5;
+  var _val5 = arr;
+  $console.log([arr.length], [[8, 8], [3, 3]], \\"file\\", [\\"arr~_val5\\"], 1);
+  return _val5;
 })();
 
 (function () {
-      var _val6 = arr;
-      $console.log([_val6.length], [[9, 9], [3, 3]], \\"file\\", [\\"arr.length~_val6\\"], 1);
-      return _val6;
+  var _val6 = arr;
+  $console.log([_val6.length], [[9, 9], [3, 3]], \\"file\\", [\\"arr.length~_val6\\"], 1);
+  return _val6;
 })();"
 `;
 
