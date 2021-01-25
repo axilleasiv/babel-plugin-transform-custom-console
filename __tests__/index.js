@@ -1,4 +1,4 @@
-const babel = require('babel-core');
+const babel = require('@babel/core');
 const { logger: plugin } = require('../lib/index');
 const filename = 'file';
 const idx = 1;
@@ -314,7 +314,7 @@ it('Check double comments or falsy chars', () => {
 });
 
 // // TODO:
-it('Expression through comments', () => {
+it.skip('Expression through comments', () => {
   const { code } = babel.transform(
     `
       var i = 0;
@@ -375,7 +375,7 @@ it('Chain CallExpression', () => {
   );
 });
 
-it.only('Object destructuring', () => {
+it('Object destructuring', () => {
   const { code } = babel.transform(
     `const profile = {
       firstName: 'John',
